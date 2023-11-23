@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <item android:id="@+id/quanlysanpham"
+        android:title="QUẢN LÝ SẢN PHẨM"
+        android:icon="@drawable/icon_dienthoai"
+        />
+    <item android:id="@+id/quanlyhangsanpham"
+        android:title="QUẢN LÝ HÃNG SẢN PHẨM"
+        android:icon="@drawable/icon_hang"
+        />
+    <item android:id="@+id/quanlydonhang"
+        android:title="QUẢN LÝ ĐƠN HÀNG"
+        android:icon="@drawable/icon_dienthoai"
+
+        />
+    <item android:id="@+id/quanlydonhangchitiet"
+        android:title="QUẢN LÝ ĐƠN HÀNG CHI TIẾT"
+        android:icon="@drawable/icon_dienthoai"
+
+        />
+
+    <item android:id="@+id/quanlynhanvien"
+        android:title="QUẢN LÝ NHÂN VIÊN"
+        android:icon="@drawable/icon_dienthoai"
+
+        />
+    <item android:id="@+id/quanlykhachhang"
+        android:title="QUẢN LÝ KHÁCH HÀNG"
+        android:icon="@drawable/icon_dienthoai"
+
+        />
+    <group android:checkableBehavior="single"
+        >
+        <item android:title="THỐNG KÊ">
+            <menu >
+                <item android:id="@+id/smnn"
+                    android:title="10 SÁCH MƯỢN NHIỀU NHẤT"
+                    />
+                <item android:id="@+id/doanhthu"
+                    android:title="DOANH THU "
+                    />
+            </menu>
+        </item>
+    </group>
+    <group android:checkableBehavior="single"
+        >
+        <item android:title="NGƯỜI DÙNG">
+            <menu >
+                <item android:id="@+id/themnguoidung"
+                    android:title="THÊM NGƯỜI DÙNG"
+                    />
+                <item android:id="@+id/doimatkhau"
+                    android:title="ĐỔI MẬT KHẨU"
+                    />
+                <item android:id="@+id/dangxuat"
+                    android:title="ĐĂNG XUẤT"
+                    />
+            </menu>
+        </item>
+    </group>
+
+</menu>
