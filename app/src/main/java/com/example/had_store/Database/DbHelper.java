@@ -52,13 +52,14 @@ public class DbHelper extends SQLiteOpenHelper {
                 "soLuongSp integer not null," +
                 "trangThaiSp text not null," +//có sale hay không
                 "maHang integer references HangSanPham(maHang), " +
-                "anhSp text not null )");
+                "anhSp text not null ," +
+                "mota Text not null)");
         sqLiteDatabase.execSQL("insert into SanPham values " +
-                "(1,'IPHONE 15 PRO MAX',35000000,123,'sale30%',1,'linkanh')," +
-                "(2,'VIVO X NOTE',20000000,12,'Khong',4,'linkanh')," +
-                "(3,'IPHONE 13 PRO MAX',20000000,23,'sale30%',1,'linkanh')," +
-                "(4,'IPHONE 15 PRO ',30000000,79,'khong',1,'linkanh')," +
-                "(5,'SAMSUNG GALAXY S23',15000000,68,'sale30%',2,'link anh')");
+                "(1,'IPHONE 15 PRO MAX',35000000,123,'sale30%',1,'linkanh','sale')," +
+                "(2,'VIVO X NOTE',20000000,12,'Khong',4,'linkanh','sale')," +
+                "(3,'IPHONE 13 PRO MAX',20000000,23,'sale30%',1,'linkanh','sale')," +
+                "(4,'IPHONE 15 PRO ',30000000,79,'khong',1,'linkanh','sale')," +
+                "(5,'SAMSUNG GALAXY S23',15000000,68,'sale30%',2,'link anh','sale')");
 
         sqLiteDatabase.execSQL("create table GioHang (" +
                 "maGio integer primary key autoincrement," +

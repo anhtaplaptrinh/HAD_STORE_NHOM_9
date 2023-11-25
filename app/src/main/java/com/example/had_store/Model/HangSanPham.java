@@ -6,6 +6,7 @@ public class HangSanPham {
     private String diaChiHang;
     private String anhHang;
 
+
     @Override
     public String toString() {
         return "HangSanPham{" +
@@ -15,6 +16,8 @@ public class HangSanPham {
                 ", anhHang='" + anhHang + '\'' +
                 '}';
     }
+
+
 
     public int getMaHang() {
         return maHang;

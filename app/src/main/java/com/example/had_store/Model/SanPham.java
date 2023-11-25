@@ -1,36 +1,38 @@
 package com.example.had_store.Model;
 
 public class SanPham {
-   private int Masp,maHang,GiaSp,SoLuongSp;
-   private String TenSp,anhSp,ttSp;
+   private int masp,maHang,giaSp,soLuongSp;
+   private String tenSp,anhSp,ttSp,mota;
 
     public SanPham() {
     }
 
-    public SanPham(int masp, int maHang, int giaSp, int soLuongSp, String tenSp) {
-        Masp = masp;
+    public SanPham(int masp, int maHang, int giaSp, int soLuongSp, String tenSp, String anhSp, String ttSp, String mota) {
+        this.masp = masp;
         this.maHang = maHang;
-        GiaSp = giaSp;
-        SoLuongSp = soLuongSp;
-        TenSp = tenSp;
-    }
-
-    public SanPham(int masp, int maHang, int giaSp, int soLuongSp, String tenSp, String anhSp, String ttSp) {
-        this.Masp = masp;
-        this.maHang = maHang;
-        this.GiaSp = giaSp;
-        this.SoLuongSp = soLuongSp;
-        this.TenSp = tenSp;
+        this.giaSp = giaSp;
+        this.soLuongSp = soLuongSp;
+        this.tenSp = tenSp;
         this.anhSp = anhSp;
         this.ttSp = ttSp;
+        this.mota = mota;
+    }
+
+    public SanPham(int masp, int maHang, int giaSp, int soLuongSp, String tenSp, String anhSp) {
+        this.masp = masp;
+        this.maHang = maHang;
+        this.giaSp = giaSp;
+        this.soLuongSp = soLuongSp;
+        this.tenSp = tenSp;
+        this.anhSp = anhSp;
     }
 
     public int getMasp() {
-        return Masp;
+        return masp;
     }
 
     public void setMasp(int masp) {
-        this.Masp = masp;
+        this.masp = masp;
     }
 
     public int getMaHang() {
@@ -42,27 +44,27 @@ public class SanPham {
     }
 
     public int getGiaSp() {
-        return GiaSp;
+        return giaSp;
     }
 
     public void setGiaSp(int giaSp) {
-        this.GiaSp = giaSp;
+        this.giaSp = giaSp;
     }
 
     public int getSoLuongSp() {
-        return SoLuongSp;
+        return soLuongSp;
     }
 
     public void setSoLuongSp(int soLuongSp) {
-        this.SoLuongSp = soLuongSp;
+        this.soLuongSp = soLuongSp;
     }
 
     public String getTenSp() {
-        return TenSp;
+        return tenSp;
     }
 
     public void setTenSp(String tenSp) {
-        this.TenSp = tenSp;
+        this.tenSp = tenSp;
     }
 
     public String getAnhSp() {
@@ -79,5 +81,13 @@ public class SanPham {
 
     public void setTtSp(String ttSp) {
         this.ttSp = ttSp;
+    }
+
+    public String getMota() {
+        return mota;
+    }
+
+    public void setMota(String mota) {
+        this.mota = mota;
     }
 }

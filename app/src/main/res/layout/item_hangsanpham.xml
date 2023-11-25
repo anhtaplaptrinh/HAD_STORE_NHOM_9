@@ -5,29 +5,29 @@
     android:orientation="vertical">
     <TextView
         android:id="@+id/tvMaHang"
-        android:layout_width="match_parent"
+        android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:textColor="#F44336"
         android:textStyle="bold"
         android:textSize="25sp"/>
     <TextView
         android:id="@+id/tvTenHang"
-        android:layout_width="match_parent"
+        android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:textColor="#F44336"
         android:textStyle="bold"
         android:textSize="25sp"/>
     <TextView
         android:id="@+id/tvDiaChiHang"
-        android:layout_width="match_parent"
+        android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:textColor="#F44336"
         android:textStyle="bold"
         android:textSize="25sp"/>
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imgAnhSp"/>
+        android:id="@+id/imgAnhHSp"/>
     <ImageView
         android:id="@+id/imgDeleteHang"
         android:layout_width="wrap_content"

@@ -4,11 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     >
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/lvSanPham"/>
+        android:id="@+id/recviewsanpham"
+        />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabSanPham"
         android:layout_width="wrap_content"

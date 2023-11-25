@@ -13,13 +13,15 @@ import java.util.List;
 
 public class SanPhamDao {
     private SQLiteDatabase db;
+    private DbHelper dbHelper;
     public SanPhamDao(Context context){
         DbHelper dbHelper = new DbHelper(context);
         db = dbHelper.getWritableDatabase();
     }
 
-    public long insert(SanPham sanPham){
+    public boolean insert(SanPham sanPham){
         ContentValues values = new ContentValues();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         values.put("maSp",sanPham.getMasp());
         values.put("tenSp",sanPham.getTenSp());
         values.put("giaSp",sanPham.getGiaSp());
@@ -27,7 +29,8 @@ public class SanPhamDao {
         values.put("maHang",sanPham.getMaHang());
         values.put("anhSp",sanPham.getAnhSp());
         values.put("trangThaiSp",sanPham.getTtSp());
-        return db.insert("SanPham",null,values);
+       long row = db.insert("SanPham", null,values);
+       return (row > 0);
     }
 
     public int update(SanPham sanPham){
@@ -42,8 +45,11 @@ public class SanPhamDao {
         return  db.update("SanPham",values,"maSp=?",new String[]{sanPham.getTenSp()});
 
     }
-    public int delete(String id){
-        return db.delete("SanPham","maSp=?", new String[]{id});
+    public boolean delete(String id){
+
+         db.delete("SanPham","maSp=?", new String[]{String.valueOf(id)});
+
+        return true;
     }
 
     public List<SanPham> getDATA(String sql, String... selectionArgs) {

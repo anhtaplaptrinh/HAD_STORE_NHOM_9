@@ -1,96 +1,102 @@
 package com.example.had_store.Adapter;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.had_store.DAO.SanPhamDao;
 import com.example.had_store.Model.SanPham;
 import com.example.had_store.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class SanPhamAdapter extends ArrayAdapter<SanPham> {
-    private List<SanPham> sanPhamList1;
-    private List<SanPham> sanPhamList2;
+public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.viewholder> {
+    private final Context context;
+    private final ArrayList<SanPham> list;
+    SanPhamDao sanPhamDao;
 
-    public SanPhamAdapter(@NonNull Context context, List<SanPham> sanPhamList) {
-        super(context, 0,sanPhamList);
-        this.sanPhamList1 =new ArrayList<>(sanPhamList);
-        this.sanPhamList2 = new ArrayList<>(sanPhamList);
+    public SanPhamAdapter(Context context, ArrayList<SanPham> list) {
+        this.context = context;
+        this.list = list;
+        sanPhamDao = new SanPhamDao(context);
     }
+
     @NonNull
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        if (convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_sanpham,parent,false);
-        }
-        ImageView imgDeleteSach = convertView.findViewById(R.id.imgDeleteSach);
-        imgDeleteSach.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SanPham sanPhamdelete = getItem(position);
-                handleDeleteSanPham(sanPhamdelete);
-            }
-
-            private void handleDeleteSanPham( final  SanPham sanPhamdelete) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("DELETE!");
-                builder.setMessage("Bạn có muốn xoá k");
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        deleteSanPham(sanPhamdelete);
-                    }
-
-                    private void deleteSanPham(SanPham sanPham) {
-                        SanPhamDao sanPhamDao = new SanPhamDao(getContext());
-                        int relust = sanPhamDao.delete(sanPham.getTenSp());
-                        if (relust > 0){
-                            remove(sanPham);
-                            notifyDataSetChanged();
-                            Toast.makeText(getContext(), "Xoá Thành công", Toast.LENGTH_SHORT).show();
-                        }else {
-                            Toast.makeText(getContext(), "Xoá Thất Bại", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }
-        });
-        SanPham sanPham = getItem(position);
-        if (sanPham != null){
-            TextView tvMaSp = convertView.findViewById(R.id.tvMaSp);
-            TextView tvTenSp = convertView.findViewById(R.id.tvTenSp);
-            TextView tvGiaSp = convertView.findViewById(R.id.tvGiaSp);
-            TextView tvSoLuongSp = convertView.findViewById(R.id.tvSoLuongSp);
-            TextView tvMaHang = convertView.findViewById(R.id.tvMaHang);
-
-            tvMaSp.setText(String.valueOf("ID" +sanPham.getMasp()));
-            tvTenSp.setText(sanPham.getTenSp());
-            tvGiaSp.setText(sanPham.getGiaSp());
-            tvSoLuongSp.setText(sanPham.getSoLuongSp());
-            tvMaHang.setText(sanPham.getMaHang());
-
-        }
-        return convertView;
+    public SanPhamAdapter.viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+        View view = inflater.inflate(R.layout.item_sanpham, null);
+        return new viewholder(view);
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull SanPhamAdapter.viewholder holder, int position) {
+        holder.tvMaSp.setText(String.valueOf(list.get(position).getMasp()));
+        holder.tvTenSp.setText(list.get(position).getTenSp());
+        holder.tvGiaSp.setText(String.valueOf(list.get(position).getGiaSp()));
+        holder.tvMota.setText(list.get(position).getMota());
+        holder.tvSoLuongSp.setText(String.valueOf(list.get(position).getSoLuongSp()));
+        holder.imgAnhSp.setText(String.valueOf(list.get(position).getAnhSp()));
+        holder.tvMaHang.setText(String.valueOf(list.get(position).getMaHang()));
+        SanPham sp = list.get(position);
+        holder.imgDeleteSach.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("CẢNH BÁO");
+                builder.setMessage("BẠN CÓ MUỐN XOÁ K");
+                builder.setPositiveButton("có", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (sanPhamDao.delete(String.valueOf(sp.getMasp()))){
+                            list.clear();
+                            list.addAll(sanPhamDao.getAll());
+                            notifyDataSetChanged();
+                            Toast.makeText(context, "Xoá ok", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(context, "Xoá k đc", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });builder.setNegativeButton("KHông", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(context, "không có", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+                builder.show();
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+    public  class viewholder extends RecyclerView.ViewHolder{
+        TextView tvMaSp,tvTenSp,tvGiaSp,tvSoLuongSp,tvMaHang,imgAnhSp,tvMota;
+        ImageView imgDeleteSach;
+        public viewholder(@NonNull View itemView) {
+            super(itemView);
+            tvMaSp = itemView.findViewById(R.id.tvMaSp);
+            tvTenSp = itemView.findViewById(R.id.tvTenSp);
+            tvGiaSp = itemView.findViewById(R.id.tvGiaSp);
+            tvSoLuongSp = itemView.findViewById(R.id.tvSoLuongSp);
+            tvMaHang = itemView.findViewById(R.id.tvMaHang);
+            imgAnhSp = itemView.findViewById(R.id.imgAnhSp);
+            tvMota = itemView.findViewById(R.id.tvMota);
+            imgDeleteSach = itemView.findViewById(R.id.imgDeleteSach);
+        }
+    }
 }

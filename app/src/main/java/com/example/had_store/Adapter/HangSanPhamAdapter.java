@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.had_store.DAO.HangSanPhamDao;
 import com.example.had_store.Model.HangSanPham;
 import com.example.had_store.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -43,11 +44,12 @@ public class HangSanPhamAdapter extends RecyclerView.Adapter<HangSanPhamAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull HangSanPhamAdapter.viewholder holder, int position) {
-        holder.tvMaHang.setText(String.valueOf(list.get(position).getMaHang()));
-        holder.tvTenHang.setText(list.get(position).getTenHang());
-        holder.tvDiaChiHang.setText(list.get(position).getDiaChiHang());
-        HangSanPham hssp = list.get(position);
+        holder.tvMaHang.setText("Mã hãng : "+String.valueOf(list.get(position).getMaHang()));
+        holder.tvTenHang.setText("Tên hãng : "+list.get(position).getTenHang());
+        holder.tvDiaChiHang.setText("Địa chỉ hãng : "+list.get(position).getDiaChiHang());
+        Picasso.get().load(list.get(position).getAnhHang()).into(holder.tvanh);
 
+        HangSanPham hssp = list.get(position);
         holder.imgDeleteHang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,8 +68,7 @@ public class HangSanPhamAdapter extends RecyclerView.Adapter<HangSanPhamAdapter.
                             Toast.makeText(context, "xoá thất bại", Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
-                builder.setNegativeButton("không", new DialogInterface.OnClickListener() {
+                });builder.setNegativeButton("không", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Toast.makeText(context, "không có", Toast.LENGTH_SHORT).show();
@@ -86,14 +87,15 @@ public class HangSanPhamAdapter extends RecyclerView.Adapter<HangSanPhamAdapter.
         return list.size();
     }
     public class viewholder extends RecyclerView.ViewHolder{
-    TextView tvMaHang,tvTenHang,tvDiaChiHang;
-    ImageView imgDeleteHang;
+        TextView tvMaHang,tvTenHang,tvDiaChiHang;
+        ImageView imgDeleteHang,tvanh;
         public viewholder(@NonNull View itemView) {
             super(itemView);
             tvMaHang = itemView.findViewById(R.id.tvMaHang);
             tvTenHang = itemView.findViewById(R.id.tvTenHang);
             tvDiaChiHang = itemView.findViewById(R.id.tvDiaChiHang);
             imgDeleteHang = itemView.findViewById(R.id.imgDeleteHang);
+            tvanh = itemView.findViewById(R.id.imgAnhHSp);
         }
     }
 }
