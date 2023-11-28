@@ -9,15 +9,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.had_store.DAO.KhachHangDao;
 import com.example.had_store.DAO.NhanVienDao;
+import com.example.had_store.Model.KhachHang;
 import com.example.had_store.Model.NhanVien;
 
 public class ManHinh_DangKy extends AppCompatActivity {
 
-    private EditText edMaNv, edTenNv, edMatKhauNv, edSoNv, edEmailNv, edAnhNv;
+    private EditText edMaNv, edTenNv, edMatKhauNv, edSoNv, edEmailNv, edAnhNv, edDiaChi;
     private Button btnSave, btnCancel;
-
-    private NhanVienDao nhanVienDao;
+    private KhachHangDao nhanVienDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +32,12 @@ public class ManHinh_DangKy extends AppCompatActivity {
         edSoNv = findViewById(R.id.edSoNv);
         edEmailNv = findViewById(R.id.edEmailNv);
         edAnhNv = findViewById(R.id.edAnhNv);
+        edDiaChi = findViewById(R.id.edDiaChiNv);
         btnSave = findViewById(R.id.btnSaveLS);
         btnCancel = findViewById(R.id.btnCancelLS);
 
         // Initialize DAO
-        nhanVienDao = new NhanVienDao(this);
+        nhanVienDao = new KhachHangDao(this);
 
         // Set click listener for the Save button
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +65,7 @@ public class ManHinh_DangKy extends AppCompatActivity {
         int soNv = Integer.parseInt(edSoNv.getText().toString().trim());
         String emailNv = edEmailNv.getText().toString().trim();
         String anhNv = edAnhNv.getText().toString().trim();
+        String diachi = edDiaChi.getText().toString().trim();
 
         // Validate input
         if (maNv.isEmpty() || tenNv.isEmpty() || matKhauNv.isEmpty() || emailNv.isEmpty()) {
@@ -77,18 +80,15 @@ public class ManHinh_DangKy extends AppCompatActivity {
         }
 
         // Create a new NhanVien object
-        NhanVien newNhanVien = new NhanVien(maNv, tenNv, matKhauNv, soNv, emailNv, anhNv);
+        KhachHang newNhanVien = new KhachHang(maNv, tenNv, matKhauNv, soNv, emailNv,diachi, anhNv);
 
         // Insert the new NhanVien into the database
         long result = nhanVienDao.insert(newNhanVien);
-
         if (result > 0) {
             // Registration successful
             Toast.makeText(this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(ManHinh_DangKy.this, ManHinh_TrangChu.class);
+            Intent intent = new Intent(ManHinh_DangKy.this, ManHinh_DangNhap.class);
             startActivity(intent);
-
-
             finish(); // Close the registration screen
         } else {
             // Registration failed

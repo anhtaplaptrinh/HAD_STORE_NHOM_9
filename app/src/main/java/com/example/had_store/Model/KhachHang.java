@@ -4,7 +4,7 @@ public class KhachHang {
     private String maKh;
     private String tenKh,matKhauKh;
     private int soKh;
-    private String emailKh;
+    private String emailKh,diaChiKh,anhKh;
 
     @Override
     public String toString() {
@@ -17,6 +17,16 @@ public class KhachHang {
                 ", diaChiKh='" + diaChiKh + '\'' +
                 ", anhKh='" + anhKh + '\'' +
                 '}';
+    }
+
+    public KhachHang(String maKh, String tenKh, String matKhauKh, int soKh, String emailKh, String diaChiKh, String anhKh) {
+        this.maKh = maKh;
+        this.tenKh = tenKh;
+        this.matKhauKh = matKhauKh;
+        this.soKh = soKh;
+        this.emailKh = emailKh;
+        this.diaChiKh = diaChiKh;
+        this.anhKh = anhKh;
     }
 
     public String getMaKh() {
@@ -74,18 +84,6 @@ public class KhachHang {
     public void setAnhKh(String anhKh) {
         this.anhKh = anhKh;
     }
-
-    public KhachHang(String maKh, String tenKh, String matKhauKh, int soKh, String emailKh, String diaChiKh, String anhKh) {
-        this.maKh = maKh;
-        this.tenKh = tenKh;
-        this.matKhauKh = matKhauKh;
-        this.soKh = soKh;
-        this.emailKh = emailKh;
-        this.diaChiKh = diaChiKh;
-        this.anhKh = anhKh;
-    }
-
-    private String diaChiKh,anhKh;
 
     public KhachHang() {
     }

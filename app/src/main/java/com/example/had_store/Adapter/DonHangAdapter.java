@@ -27,6 +27,7 @@ public class DonHangAdapter extends ArrayAdapter<DonHang> {
 
     private List<DonHang> originalList;
     private List<DonHang> filteredList;
+    private DonHangDao donHangDao;
     private final SimpleDateFormat dateFormat;
 
     public DonHangAdapter(Context context, List<DonHang> donHangList) {
@@ -34,6 +35,7 @@ public class DonHangAdapter extends ArrayAdapter<DonHang> {
         this.originalList = new ArrayList<>(donHangList);
         this.filteredList = new ArrayList<>(donHangList);
         this.dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        this.donHangDao = new DonHangDao(context);
     }
 
     @NonNull
@@ -57,22 +59,27 @@ public class DonHangAdapter extends ArrayAdapter<DonHang> {
 
         DonHang donHang = getItem(position);
 
+
+
         if (donHang != null) {
             TextView tvMaDon = convertView.findViewById(R.id.tvMaDon);
             TextView tvNgayLap = convertView.findViewById(R.id.tvNgayLap);
             TextView tvTrangThaiDon = convertView.findViewById(R.id.tvTrangThaiDon);
-            TextView tvPTVanChuyen = convertView.findViewById(R.id.tvPTVanChuyen);
-            TextView tvMaDonCt = convertView.findViewById(R.id.tvMaDonCt);
-            TextView tvMaNv = convertView.findViewById(R.id.tvMaNv);
+            TextView tvMaKh = convertView.findViewById(R.id.tvMaKh);
+            TextView tvMaGio = convertView.findViewById(R.id.tvMaGio);
 
-            tvMaDon.setText(String.valueOf("ID ORDERS : "+donHang.getMaDon()))  ;
+            tvMaDon.setText(String.valueOf("Mã đơn : "+donHang.getMaDon()))  ;
             tvNgayLap.setText(dateFormat.format(donHang.getNgayLap()));
-            tvTrangThaiDon.setText("STATUS : "+donHang.getTrangThaiDon());
-            tvPTVanChuyen.setText("METHOD : "+donHang.getpTVanChuyen());
-            tvMaDonCt.setText(String.valueOf("ID DETAILED ORDERS : "+donHang.getMaGio()));
-            tvMaNv.setText(String.valueOf("ID EMPLOYEE : "+donHang.getMaNv()));
-        }
+            tvTrangThaiDon.setText("Trạng thái : "+donHang.getTrangThaiDon());
+            tvMaGio.setText("Mã giỏ hàng : "+donHang.getMaGio());
+            tvMaKh.setText(String.valueOf("Mã khách hàng : "+donHang.getMaKh()));
 
+            TextView tvTongTien = convertView.findViewById(R.id.tvTongTien);
+
+            // Calculate and set the total cost
+            int totalCost = donHangDao.calculateTotalCost(donHang.getMaGio());
+            tvTongTien.setText("Tổng tiền : " + totalCost);
+        }
         return convertView;
     }
     private void handleDeleteDonHang(final DonHang donHangToDelete) {

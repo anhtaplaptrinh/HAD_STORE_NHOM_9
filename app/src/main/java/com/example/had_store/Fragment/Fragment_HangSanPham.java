@@ -31,64 +31,61 @@ public class Fragment_HangSanPham extends Fragment {
     HangSanPhamAdapter adapter;
     HangSanPhamDao hspDao;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment__hang_san_pham, container, false);
+        View view = inflater.inflate(R.layout.fragment__hang_san_pham, container, false);
         recyclerView = view.findViewById(R.id.recviewhangsanpham);
-        floatingActionButton =view.findViewById(R.id.fabHangSanPham);
+        floatingActionButton = view.findViewById(R.id.fabHangSanPham);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         hspDao = new HangSanPhamDao(getContext());
-        list =hspDao.selectAll();
-        adapter = new HangSanPhamAdapter(getContext(),list);
+        list = hspDao.selectAll();
+        adapter = new HangSanPhamAdapter(getContext(), list);
         recyclerView.setAdapter(adapter);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                add();
-            }
-        });
+
+        floatingActionButton.setOnClickListener(v -> add());
+
         return view;
     }
-    public void  add(){
+
+    public void add() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        LayoutInflater inflater = getLayoutInflater();
-        View view =inflater.inflate(R.layout.dialog_hangsanpham, null);
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_hangsanpham, null);
         builder.setView(view);
         Dialog dialog = builder.create();
         dialog.show();
+
         EditText edMaHang = view.findViewById(R.id.edMaHang);
         EditText edTenHang = view.findViewById(R.id.edTenHang);
         EditText edDiaChiHang = view.findViewById(R.id.edDiaChiHang);
         EditText edAnhHang = view.findViewById(R.id.edAnhHang);
         Button btnSaveLS = view.findViewById(R.id.btnSaveLS);
-        btnSaveLS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String maHang = edMaHang.getText().toString();
-                String tenhang = edTenHang.getText().toString();
-                String diachihang = edDiaChiHang.getText().toString();
-                String anhHang = edAnhHang.getText().toString();
-                if (maHang.trim().isEmpty() || tenhang.trim().isEmpty() || diachihang.trim().isEmpty() || anhHang.trim().isEmpty() ){
-                    Toast.makeText(getContext(), "k đc bỏ trống", Toast.LENGTH_SHORT).show();
 
-                }else {
-                    HangSanPham hspp = new HangSanPham();
-                    if (hspDao.insert(hspp)) {
-                        list.clear();
-                        list.addAll(hspDao.selectAll());
-                        adapter.notifyDataSetChanged();
-                        dialog.dismiss();
-                        Toast.makeText(getContext(), "Thêm thành công", Toast.LENGTH_SHORT).show();
-                    }else {
-                        Toast.makeText(getContext(), "Thêm thất bại", Toast.LENGTH_SHORT).show();
+        btnSaveLS.setOnClickListener(v -> {
+            String maHang = edMaHang.getText().toString();
+            String tenHang = edTenHang.getText().toString();
+            String diaChiHang = edDiaChiHang.getText().toString();
+            String anhHang = edAnhHang.getText().toString();
 
-                    }
+            if (maHang.trim().isEmpty() || tenHang.trim().isEmpty() || diaChiHang.trim().isEmpty() || anhHang.trim().isEmpty()) {
+                Toast.makeText(getContext(), "Không được để trống", Toast.LENGTH_SHORT).show();
+            } else {
+                HangSanPham newHangSanPham = new HangSanPham();
+                newHangSanPham.setMaHang(Integer.parseInt(maHang));
+                newHangSanPham.setTenHang(tenHang);
+                newHangSanPham.setDiaChiHang(diaChiHang);
+                newHangSanPham.setAnhHang(anhHang);
+
+                if (hspDao.insert(newHangSanPham)) {
+                    list.clear();
+                    list.addAll(hspDao.selectAll());
+                    adapter.notifyDataSetChanged();
+                    dialog.dismiss();
+                    Toast.makeText(getContext(), "Thêm thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Thêm thất bại", Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         });
     }

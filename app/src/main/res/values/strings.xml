@@ -4,4 +4,10 @@
     <string name="close">close nav</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+        <string-array name="user_types">
+            <item>Khách hàng</item>
+            <item>Nhân viên</item>
+        </string-array>
+
 </resources>

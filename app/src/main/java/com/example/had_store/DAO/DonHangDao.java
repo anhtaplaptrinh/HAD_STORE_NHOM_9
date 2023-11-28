@@ -17,6 +17,7 @@ import java.util.List;
 
 public class DonHangDao {
     private static final String TABLE_NAME = "DonHang";
+    private SQLiteDatabase database;
 
     private DbHelper dbHelper;
     private SimpleDateFormat dateFormat;
@@ -24,6 +25,8 @@ public class DonHangDao {
     public DonHangDao(Context context) {
         dbHelper = new DbHelper(context);
         dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        database = dbHelper.getWritableDatabase(); // or getReadableDatabase() depending on your use case
+
     }
 
     public List<DonHang> getAllDonHang() {
@@ -37,18 +40,16 @@ public class DonHangDao {
             int maDonIndex = cursor.getColumnIndex("maDon");
             int ngayLapIndex = cursor.getColumnIndex("ngayLap");
             int trangThaiDonIndex = cursor.getColumnIndex("trangThaiDon");
-            int pTVanChuyenIndex = cursor.getColumnIndex("pTVanChuyen");
             int maGioIndex = cursor.getColumnIndex("maGio");
-            int maNvIndex = cursor.getColumnIndex("maNv");
+            int maKhIndex = cursor.getColumnIndex("maKh");
 
             while (cursor.moveToNext()) {
                 DonHang donHang = new DonHang();
                 donHang.setMaDon(cursor.getInt(maDonIndex));
                 donHang.setNgayLap(parseDate(cursor.getString(ngayLapIndex)));
                 donHang.setTrangThaiDon(cursor.getString(trangThaiDonIndex));
-                donHang.setpTVanChuyen(cursor.getString(pTVanChuyenIndex));
                 donHang.setMaGio(cursor.getInt(maGioIndex));
-                donHang.setMaNv(cursor.getString(maNvIndex));
+                donHang.setMaKh(cursor.getString(maKhIndex));
 
                 donHangList.add(donHang);
             }
@@ -79,9 +80,9 @@ public class DonHangDao {
         ContentValues values = new ContentValues();
         values.put("ngayLap", dateFormat.format(new Date(currentTimeMillis)));
         values.put("trangThaiDon", "Đang Đóng Gói");
-        values.put("pTVanChuyen", donHang.getpTVanChuyen());
-        values.put("maGio", donHang.getMaGio());
-        values.put("maNv", donHang.getMaNv());
+        values.put("maGio",donHang.getMaGio());
+
+        values.put("maKh", donHang.getMaKh());
 
         long result = db.insert(TABLE_NAME, null, values);
 
@@ -97,9 +98,8 @@ public class DonHangDao {
             values.put("ngayLap", dateFormat.format(donHang.getNgayLap()));
         }
         values.put("trangThaiDon", donHang.getTrangThaiDon());
-        values.put("pTVanChuyen", donHang.getpTVanChuyen());
-        values.put("maGio", donHang.getMaGio());
-        values.put("maNv", donHang.getMaNv());
+        values.put("maGio",donHang.getMaGio());
+        values.put("maKh", donHang.getMaKh());
 
         int result = db.update(TABLE_NAME, values, "maDon=?", new String[]{String.valueOf(donHang.getMaDon())});
 
@@ -117,7 +117,7 @@ public class DonHangDao {
         List<DonHang> pendingOrders = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String[] columns = {"maDon", "ngayLap", "trangThaiDon", "pTVanChuyen", "maGio", "maNv"};
+        String[] columns = {"maDon", "ngayLap", "trangThaiDon","maGio", "maKh"};
         String selection = "trangThaiDon = ?";
         String[] selectionArgs = {"Đang Đóng Gói"};
 
@@ -129,10 +129,8 @@ public class DonHangDao {
                 donHang.setNgayLap(parseDate(cursor.getString(cursor.getColumnIndex("ngayLap"))));
                 donHang.setMaDon(cursor.getInt(cursor.getColumnIndex("maDon")));
                 donHang.setTrangThaiDon(cursor.getString(cursor.getColumnIndex("trangThaiDon")));
-                donHang.setpTVanChuyen(cursor.getString(cursor.getColumnIndex("pTVanChuyen")));
-                // Replace "maDonCt" with the correct column name if needed
                 donHang.setMaGio(cursor.getInt(cursor.getColumnIndex("maGio")));
-                donHang.setMaNv(cursor.getString(cursor.getColumnIndex("maNv")));
+                donHang.setMaKh(cursor.getString(cursor.getColumnIndex("maKh")));
 
                 pendingOrders.add(donHang);
             } while (cursor.moveToNext());
@@ -143,6 +141,70 @@ public class DonHangDao {
 
         return pendingOrders;
     }
+    public boolean isMaGioExists(String maGio) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String query = "SELECT COUNT(*) FROM " + DonHangDao.TABLE_NAME + " WHERE maGio = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{maGio});
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        cursor.close();
+        db.close();
+        return count > 0;
+    }
+
+
+    public int calculateTotalCost(int maGio) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        int totalCost = 0;
+
+        String query = "SELECT SUM(sp.giaSp * gh.soLuong) AS totalCost " +
+                "FROM SanPham sp INNER JOIN GioHang gh ON sp.maSp = gh.maSp " +
+                "WHERE gh.maGio = ?";
+        String[] selectionArgs = {String.valueOf(maGio)};
+
+        Cursor cursor = db.rawQuery(query, selectionArgs);
+
+        if (cursor.moveToFirst()) {
+            totalCost = cursor.getInt(cursor.getColumnIndex("totalCost"));
+        }
+
+        cursor.close();
+        db.close();
+
+        return totalCost;
+    }
+
+    public List<DonHang> getDonHangsByMaKh(String maKh){
+        List<DonHang> donHangList = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            if (maKh == null) {
+                // Query to get all items in the cart
+                cursor = database.query("DonHang", null, null, null, null, null, null);
+            } else {
+                // Query to get items in the cart for a specific user
+                String[] selectionArgs = {maKh};
+                cursor = database.query("DonHang", null, "maKh = ?", selectionArgs, null, null, null);
+            }
+            if(cursor != null && cursor.moveToFirst()){
+                do{
+                    DonHang donHang = new DonHang();
+                    donHang.setNgayLap(parseDate(cursor.getString(cursor.getColumnIndex("ngayLap"))));
+                    donHang.setMaDon(cursor.getInt(cursor.getColumnIndex("maDon")));
+                    donHang.setTrangThaiDon(cursor.getString(cursor.getColumnIndex("trangThaiDon")));
+                    donHang.setMaGio(cursor.getInt(cursor.getColumnIndex("maGio")));
+                    donHang.setMaKh(cursor.getString(cursor.getColumnIndex("maKh")));
+                    donHangList.add(donHang);
+                }while (cursor.moveToNext());
+            }
+        }finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return donHangList;
+    }
+
 
 
 }

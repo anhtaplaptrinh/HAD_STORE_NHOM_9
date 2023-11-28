@@ -15,6 +15,13 @@
             android:textColor="#F44336"
             android:textStyle="bold"
             android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/tvMaGio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#F44336"
+            android:textStyle="bold"
+            android:textSize="15sp"/>
 
         <TextView
             android:id="@+id/tvTrangThaiDon"
@@ -24,31 +31,26 @@
             android:inputType="number"
             android:textStyle="bold"
             android:textSize="12sp"/>
+
         <TextView
-            android:id="@+id/tvPTVanChuyen"
+            android:id="@+id/tvMaKh"
             android:layout_width="match_parent"
-            android:inputType="number"
+
             android:layout_height="wrap_content"
-            android:textColor="#03A9F4"
+            android:textColor="#2196F3"
             android:textStyle="bold"
             android:textSize="12sp"/>
-        <TextView
-            android:id="@+id/tvMaDonCt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#03A9F4"
-            android:textStyle="bold"
-            android:textSize="12sp"/>
+
         <LinearLayout
             android:layout_width="330dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/tvMaNv"
-                android:layout_width="240dp"
+                android:id="@+id/tvTongTien"
                 android:layout_height="wrap_content"
-                android:textColor="#2196F3"
+                android:textColor="#03A9F4"
                 android:textStyle="bold"
+                android:layout_width="240dp"
                 android:textSize="12sp"/>
             <TextView
                 android:layout_width="wrap_content"

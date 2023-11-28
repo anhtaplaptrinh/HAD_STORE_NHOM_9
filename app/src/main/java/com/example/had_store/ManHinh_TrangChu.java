@@ -1,13 +1,5 @@
 package com.example.had_store;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -17,11 +9,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.example.had_store.Fragment.Fragment_DonHang;
+import com.example.had_store.Fragment.Fragment_GioHang;
 import com.example.had_store.Fragment.Fragment_HangSanPham;
 import com.example.had_store.Fragment.Fragment_KhachHang;
 import com.example.had_store.Fragment.Fragment_NhanVien;
 import com.example.had_store.Fragment.Fragment_SanPham;
+import com.example.had_store.Fragment.Fragment_TrangChu;
 import com.google.android.material.navigation.NavigationView;
 
 public class ManHinh_TrangChu extends AppCompatActivity {
@@ -29,68 +31,96 @@ public class ManHinh_TrangChu extends AppCompatActivity {
     Toolbar toolbar;
     NavigationView nav;
     View mHeaderView;
+    private String maKh;
+    private String userType;
 
+// Added maKh field
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_man_hinh_trang_chu);
-        drawerLayout= findViewById(R.id.drawerlayout);
+
+        drawerLayout = findViewById(R.id.drawerlayout);
         toolbar = findViewById(R.id.toolbar);
         nav = findViewById(R.id.nav);
         mHeaderView = nav.getHeaderView(0);
         setSupportActionBar(toolbar);
 
-
-        ActionBarDrawerToggle toggle= new ActionBarDrawerToggle(this,drawerLayout,toolbar, R.string.open, R.string.close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.open, R.string.close
+        );
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        setTitle("Quản lý Sản Phẩm");
-        Fragment_SanPham pm = new Fragment_SanPham();
-        replaceFrg(pm);
+
+        // Lấy thông tin quyền truy cập từ Intent
+        Intent intent = getIntent();
+        userType = intent.getStringExtra("USER_TYPE");
+        maKh = intent.getStringExtra("MA_KH");  // Added to get maKh
+
+        setTitle("Trang chủ");
+        Fragment_TrangChu trangChu = new Fragment_TrangChu();
+        replaceFrg(trangChu);
+
         nav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId()==R.id.quanlysanpham){
-                    setTitle("Quản lý sản phẩm ");
-                    Fragment_SanPham sp = new Fragment_SanPham ();
+                if (item.getItemId() == R.id.quanlyhangsanpham) {
+                    if (!"CUSTOMER".equals(userType)) {
+                        setTitle("Quản lý hãng sản phẩm ");
+                        Fragment_HangSanPham hsp = new Fragment_HangSanPham();
+                        replaceFrg(hsp);
+                    } else {
+                        Toast.makeText(ManHinh_TrangChu.this, "Bạn không có quyền truy cập mục này", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (item.getItemId() == R.id.trangchu) {
+                    setTitle("Trang chủ ");
+                    Fragment_TrangChu sp = new Fragment_TrangChu();
                     replaceFrg(sp);
-                }
-                if (item.getItemId()==R.id.quanlynhanvien){
-                    setTitle("Quản lý nhân viên ");
-                    Fragment_NhanVien nv = new Fragment_NhanVien ();
-                    replaceFrg(nv);
-                }
-                if (item.getItemId()==R.id.quanlydonhang){
+                } else if (item.getItemId() == R.id.quanlynhanvien) {
+                    if (!"CUSTOMER".equals(userType)) {
+                        setTitle("Quản lý nhân viên");
+                        Fragment_NhanVien hsp = new Fragment_NhanVien();
+                        replaceFrg(hsp);
+                    } else {
+                        Toast.makeText(ManHinh_TrangChu.this, "Bạn không có quyền truy cập mục này", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else if (item.getItemId() == R.id.quanlydonhang) {
                     setTitle("Quản lý đơn hàng");
-                    Fragment_DonHang dh = new Fragment_DonHang ();
-                    replaceFrg(dh);
-                }
-
-                if (item.getItemId()==R.id.quanlykhachhang){
-                    setTitle("Quản lý khách hàng");
-                    Fragment_KhachHang kh = new Fragment_KhachHang ();
-                    replaceFrg(kh);
-                }
-                if (item.getItemId()==R.id.quanlyhangsanpham){
-                    setTitle("Quản lý hãng sản phẩm ");
-                    Fragment_HangSanPham hsp = new Fragment_HangSanPham ();
+                    Fragment_DonHang hsp = new Fragment_DonHang();
                     replaceFrg(hsp);
-                }
 
-                if (item.getItemId()==R.id.doimatkhau){
-                    setTitle("Đổi mật khẩu");
-                    Fragment_SanPham dp = new Fragment_SanPham ();
-                    replaceFrg(dp);
-                }
-                else if (item.getItemId()==R.id.smnn){
-                    setTitle("Top 10 sách mượn nhiều nhất ");
-                    Fragment_SanPham top = new Fragment_SanPham();
-                    replaceFrg(top);
-                }
+                } else if (item.getItemId() == R.id.quanlysanpham) {
+                    setTitle("Quản lý sản phẩm ");
+                    Fragment_SanPham sanPhamFragment = new Fragment_SanPham();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("USER_TYPE", userType); // Make sure userType is not null
+                    sanPhamFragment.setArguments(bundle);
+                    replaceFrg(sanPhamFragment);
 
+                } else if (item.getItemId() == R.id.quanlykhachhang) {
+                    if (!"CUSTOMER".equals(userType)) {
+                        setTitle("Quản lý khách hàng ");
+                        Fragment_KhachHang hsp = new Fragment_KhachHang();
+                        replaceFrg(hsp);
+                    } else {
+                        Toast.makeText(ManHinh_TrangChu.this, "Bạn không có quyền truy cập mục này", Toast.LENGTH_SHORT).show();
+                    }
 
-                else if (item.getItemId()==R.id.dangxuat) {
+                } else if (item.getItemId() == R.id.quanlygiohang) {
+                    setTitle("Quản lý giỏ hàng ");
+                    Fragment_GioHang gioHangFragment = new Fragment_GioHang();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("MA_KH", maKh);
+                    gioHangFragment.setArguments(bundle);
+                    replaceFrg(gioHangFragment);
+
+                } else if (item.getItemId() == R.id.doimatkhau) {
+                    // ...
+
+                }  else if (item.getItemId() == R.id.dangxuat) {
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(ManHinh_TrangChu.this);
                     builder.setTitle("Đăng xuất");
                     builder.setMessage("Bạn có muốn đăng xuất không?");
@@ -110,13 +140,19 @@ public class ManHinh_TrangChu extends AppCompatActivity {
                     });
                     Dialog dialog = builder.create();
                     dialog.show();
-
                 }
+
                 return true;
             }
         });
     }
-    public void replaceFrg(Fragment frg){
+
+    public void replaceFrg(Fragment frg) {
+        Bundle bundle = new Bundle();
+        bundle.putString("MA_KH", maKh);
+        bundle.putString("USER_TYPE", userType);  // Add this line to pass user type
+        frg.setArguments(bundle);
+
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().replace(R.id.frmNav, frg).commit();
     }
